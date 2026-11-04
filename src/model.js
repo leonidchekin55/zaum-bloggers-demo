@@ -1,0 +1,5 @@
+import raw from './data.json' with { type: 'json' };
+export const bloggers = raw.slice(1).map(r => ({id:r[0],sku:r[1],name:r[2],platform:r[3],budget:r[4],followers:r[5],age:r[6],geo:r[7],reach:r[8],views:r[9],cost:r[10],product:r[11],format:r[12],status:r[13],date:r[14],link:r[15],comment:r[16],sourceCpm:r[17]}));
+export const cpm = b => b.reach > 0 ? b.cost / b.reach * 1000 : null;
+export const filterBloggers = (items,{search='',platform='Все площадки',status='Все статусы',budget='Все бюджеты'}={}) => {const q=search.trim().toLowerCase();return items.filter(b=>(!q||[b.name,b.sku,b.comment,b.format].some(x=>String(x).toLowerCase().includes(q)))&&(platform==='Все площадки'||b.platform===platform)&&(status==='Все статусы'||b.status===status)&&(budget==='Все бюджеты'||b.budget===budget));};
+export const summary = items => {const sum=k=>items.reduce((a,b)=>a+(Number(b[k])||0),0);const reach=sum('reach'),cost=sum('cost');return {count:items.length,cost,reach,views:sum('views'),product:sum('product'),cpm:reach?cost/reach*1000:null,complete:items.filter(x=>x.status==='Результаты получены').length};};
