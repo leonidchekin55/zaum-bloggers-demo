@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {bloggers,cpm,summary,filterBloggers} from './src/model.js';
+test('source rows and CPM match the spreadsheet',()=>{assert.equal(bloggers.length,24);for(const b of bloggers) assert.ok(Math.abs(cpm(b)-b.sourceCpm)<1e-8)});
+test('totals are sums and CPM is reach-weighted',()=>{const s=summary(bloggers);assert.equal(s.cost,510000);assert.equal(s.reach,270000);assert.equal(s.cpm,510000/270000*1000);assert.equal(summary([]).cpm,null)});
+test('combined filters and case-insensitive search',()=>{assert.equal(filterBloggers(bloggers,{platform:'VK'}).length,8);assert.equal(filterBloggers(bloggers,{search:'demo-103',platform:'VK',status:'Опубликовано'}).length,1);assert.equal(filterBloggers(bloggers,{search:'demo-103',platform:'Telegram'}).length,0)});
